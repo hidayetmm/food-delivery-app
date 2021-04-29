@@ -14,8 +14,11 @@ import {
   Animated,
 } from 'react-native';
 import { images, icons, SIZES, FONTS, COLORS } from '../constants';
+import { useDarkMode } from 'react-native-dynamic';
 
 const Home = ({ navigation }) => {
+  const isDarkMode = useDarkMode();
+
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
@@ -28,8 +31,8 @@ const Home = ({ navigation }) => {
   const initialCurrentLocation = {
     streetName: 'Latif Sultanov',
     gps: {
-      latitude: 1.5496614931250685,
-      longitude: 110.36381866919922,
+      latitude: 40.430848,
+      longitude: 49.947215,
     },
   };
 
@@ -101,8 +104,8 @@ const Home = ({ navigation }) => {
       photo: images.burger_restaurant_1,
       duration: '30 - 45 min',
       location: {
-        latitude: 1.5347282806345879,
-        longitude: 110.35632207358996,
+        latitude: 40.425357939860156,
+        longitude: 49.96016028967866,
       },
       courier: {
         avatar: images.avatar_1,
@@ -119,7 +122,7 @@ const Home = ({ navigation }) => {
         },
         {
           menuId: 2,
-          name: 'Crispy Chicken Burger with Honey Mustard',
+          name: 'Chicken Burger',
           photo: images.honey_mustard_chicken_burger,
           description: 'Crispy Chicken Burger with Honey Mustard Coleslaw',
           calories: 250,
@@ -127,7 +130,7 @@ const Home = ({ navigation }) => {
         },
         {
           menuId: 3,
-          name: 'Crispy Baked French Fries',
+          name: 'French Fries',
           photo: images.baked_fries,
           description: 'Crispy Baked French Fries',
           calories: 194,
@@ -369,7 +372,7 @@ const Home = ({ navigation }) => {
           height: 50,
           marginBottom: 10,
           zIndex: 2,
-          backgroundColor: COLORS.lightGray4,
+          backgroundColor: isDarkMode ? COLORS.black : COLORS.lightGray4,
         }}>
         <TouchableOpacity
           style={{
@@ -380,7 +383,11 @@ const Home = ({ navigation }) => {
           <Image
             source={icons.nearby}
             resizeMode="contain"
-            style={{ width: 30, height: 30 }}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: isDarkMode ? COLORS.white : COLORS.black,
+            }}
           />
         </TouchableOpacity>
 
@@ -394,12 +401,15 @@ const Home = ({ navigation }) => {
             style={{
               width: '70%',
               height: '100%',
-              backgroundColor: COLORS.lightGray3,
+              backgroundColor: isDarkMode
+                ? COLORS.darkerGray
+                : COLORS.lightGray3,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: SIZES.radius,
             }}>
-            <Text style={{ ...FONTS.h3 }}>
+            <Text
+              style={{ ...FONTS.h3, color: isDarkMode ? COLORS.white : null }}>
               {initialCurrentLocation.streetName}
             </Text>
           </View>
@@ -413,7 +423,11 @@ const Home = ({ navigation }) => {
           <Image
             source={icons.basket}
             resizeMode="contain"
-            style={{ width: 30, height: 30 }}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: isDarkMode ? COLORS.white : COLORS.black,
+            }}
           />
         </TouchableOpacity>
       </View>
@@ -427,7 +441,11 @@ const Home = ({ navigation }) => {
           padding: SIZES.padding,
           paddingBottom: SIZES.padding * 2,
           backgroundColor:
-            selectedCategory?.id === item.id ? COLORS.primary : COLORS.white,
+            selectedCategory?.id === item.id
+              ? COLORS.primary
+              : isDarkMode
+              ? COLORS.darkerGray
+              : COLORS.white,
           borderRadius: SIZES.radius,
           alignItems: 'center',
           justifyContent: 'center',
@@ -457,7 +475,11 @@ const Home = ({ navigation }) => {
           style={{
             marginTop: SIZES.padding,
             color:
-              selectedCategory?.id === item.id ? COLORS.white : COLORS.black,
+              selectedCategory?.id === item.id
+                ? COLORS.white
+                : isDarkMode
+                ? COLORS.white
+                : COLORS.black,
             ...FONTS.body5,
           }}>
           {item.name}
@@ -470,9 +492,15 @@ const Home = ({ navigation }) => {
         style={{
           padding: SIZES.padding * 2,
           paddingBottom: 0,
-          backgroundColor: COLORS.lightGray4,
+          backgroundColor: isDarkMode ? COLORS.black : COLORS.lightGray4,
         }}>
-        <Text style={{ ...FONTS.h1 }}>Main Categories</Text>
+        <Text
+          style={{
+            ...FONTS.h1,
+            color: isDarkMode ? COLORS.white : COLORS.black,
+          }}>
+          Main Categories
+        </Text>
 
         <FlatList
           data={categories}
@@ -522,7 +550,13 @@ const Home = ({ navigation }) => {
           </View>
         </View>
         {/* Restaurant info */}
-        <Text style={{ ...FONTS.body2 }}>{item.name}</Text>
+        <Text
+          style={{
+            ...FONTS.body2,
+            color: isDarkMode ? COLORS.white : COLORS.black,
+          }}>
+          {item.name}
+        </Text>
         <View style={{ marginTop: SIZES.padding, flexDirection: 'row' }}>
           {/* Rating */}
           <Image
@@ -534,7 +568,13 @@ const Home = ({ navigation }) => {
               marginRight: 10,
             }}
           />
-          <Text style={{ ...FONTS.body3 }}>{item.rating}</Text>
+          <Text
+            style={{
+              ...FONTS.body3,
+              color: isDarkMode ? COLORS.white : COLORS.black,
+            }}>
+            {item.rating}
+          </Text>
           {/* Categories */}
           <View style={{ flexDirection: 'row', marginLeft: 10 }}>
             {item.categories.map(categoryId => (
@@ -543,7 +583,11 @@ const Home = ({ navigation }) => {
                   flexDirection: 'row',
                 }}
                 key={categoryId}>
-                <Text style={{ ...FONTS.body3 }}>
+                <Text
+                  style={{
+                    ...FONTS.body3,
+                    color: isDarkMode ? COLORS.white : COLORS.black,
+                  }}>
                   {getCategoryNameById(categoryId)}
                 </Text>
                 <Text
@@ -596,7 +640,11 @@ const Home = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? COLORS.black : COLORS.lightGray4,
+      }}>
       {renderHeader()}
       <SafeAreaView style={{ zIndex: 1, backgroundColor: COLORS.lightGray4 }}>
         <CollapsibleSubHeaderAnimator translateY={translateY}>
@@ -609,10 +657,6 @@ const Home = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.lightGray4,
-  },
   shadow: {
     shadowColor: '#000',
     shadowOffset: {

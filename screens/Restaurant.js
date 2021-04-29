@@ -10,9 +10,18 @@ import {
 } from 'react-native';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import { icons, COLORS, SIZES, FONTS } from '../constants';
+import { useDarkMode } from 'react-native-dynamic';
 
 const Restaurant = ({ route, navigation }) => {
+  const isDarkMode = useDarkMode();
   const scrollX = new Animated.Value(0);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: isDarkMode ? COLORS.black : COLORS.lightGray2,
+    },
+  });
 
   const [restaurant, setRestaurant] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -26,7 +35,6 @@ const Restaurant = ({ route, navigation }) => {
 
   function editOrder(action, menuId, price) {
     let orderList = orderItems.slice();
-    console.log(orderList);
     let item = orderList.filter(a => a.menuId == menuId);
 
     if (action == '+') {
@@ -58,13 +66,23 @@ const Restaurant = ({ route, navigation }) => {
 
   function getOrderQty(menuId) {
     let orderItem = orderItems.filter(a => a.menuId == menuId);
-    console.log(orderItem);
 
     if (orderItem.length > 0) {
       return orderItem[0].qty;
     } else {
       return 0;
     }
+  }
+
+  function getBasketItemCount() {
+    let itemCount = orderItems.reduce((a, b) => a + (b.qty || 0), 0);
+
+    return itemCount;
+  }
+
+  function sumOrder() {
+    let total = orderItems.reduce((a, b) => a + (b.total || 0), 0);
+    return total.toFixed(2);
   }
 
   function renderHeader() {
@@ -80,7 +98,11 @@ const Restaurant = ({ route, navigation }) => {
           <Image
             source={icons.back}
             resizeMode="contain"
-            style={{ width: 30, height: 30 }}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: isDarkMode ? COLORS.white : COLORS.black,
+            }}
           />
         </TouchableOpacity>
 
@@ -98,9 +120,17 @@ const Restaurant = ({ route, navigation }) => {
               alignItems: 'center',
               paddingHorizontal: SIZES.padding * 3,
               borderRadius: SIZES.radius,
-              backgroundColor: COLORS.lightGray3,
+              backgroundColor: isDarkMode
+                ? COLORS.darkerGray
+                : COLORS.lightGray3,
             }}>
-            <Text style={{ ...FONTS.h3 }}>{restaurant?.name}</Text>
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: isDarkMode ? COLORS.white : COLORS.black,
+              }}>
+              {restaurant?.name}
+            </Text>
           </View>
         </View>
         <TouchableOpacity
@@ -114,7 +144,11 @@ const Restaurant = ({ route, navigation }) => {
           <Image
             source={icons.list}
             resizeMode="contain"
-            style={{ width: 30, height: 30 }}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: isDarkMode ? COLORS.white : COLORS.black,
+            }}
           />
         </TouchableOpacity>
       </View>
@@ -167,23 +201,37 @@ const Restaurant = ({ route, navigation }) => {
                   activeOpacity={0.7}
                   style={{
                     width: 50,
-                    backgroundColor: COLORS.white,
+                    backgroundColor: isDarkMode
+                      ? COLORS.darkerGray
+                      : COLORS.white,
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderBottomLeftRadius: 25,
                     borderTopLeftRadius: 25,
                   }}
                   onPress={() => editOrder('-', item.menuId, item.price)}>
-                  <Text style={{ ...FONTS.body1 }}>-</Text>
+                  <Text
+                    style={{
+                      ...FONTS.body1,
+                      color: isDarkMode ? COLORS.white : COLORS.black,
+                    }}>
+                    -
+                  </Text>
                 </TouchableOpacity>
                 <View
                   style={{
                     width: 50,
-                    backgroundColor: COLORS.white,
+                    backgroundColor: isDarkMode
+                      ? COLORS.darkerGray
+                      : COLORS.white,
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text style={{ ...FONTS.h2 }}>
+                  <Text
+                    style={{
+                      ...FONTS.h2,
+                      color: isDarkMode ? COLORS.white : COLORS.black,
+                    }}>
                     {getOrderQty(item.menuId)}
                   </Text>
                 </View>
@@ -191,14 +239,22 @@ const Restaurant = ({ route, navigation }) => {
                   activeOpacity={0.7}
                   style={{
                     width: 50,
-                    backgroundColor: COLORS.white,
+                    backgroundColor: isDarkMode
+                      ? COLORS.darkerGray
+                      : COLORS.white,
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderTopRightRadius: 25,
                     borderBottomRightRadius: 25,
                   }}
                   onPress={() => editOrder('+', item.menuId, item.price)}>
-                  <Text style={{ ...FONTS.body1 }}>+</Text>
+                  <Text
+                    style={{
+                      ...FONTS.body1,
+                      color: isDarkMode ? COLORS.white : COLORS.black,
+                    }}>
+                    +
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -215,6 +271,7 @@ const Restaurant = ({ route, navigation }) => {
                   marginVertical: 10,
                   textAlign: 'center',
                   ...FONTS.h2,
+                  color: isDarkMode ? COLORS.white : COLORS.black,
                 }}>
                 {item.name} - {item.price.toFixed(2)}
               </Text>
@@ -222,6 +279,7 @@ const Restaurant = ({ route, navigation }) => {
                 style={{
                   textAlign: 'center',
                   ...FONTS.body3,
+                  color: isDarkMode ? COLORS.white : COLORS.black,
                 }}>
                 {item.description}
               </Text>
@@ -244,7 +302,7 @@ const Restaurant = ({ route, navigation }) => {
               <Text
                 style={{
                   ...FONTS.body3,
-                  color: COLORS.darkgray,
+                  color: isDarkMode ? COLORS.secondary : COLORS.darkgray,
                 }}>
                 {item.calories.toFixed(2)} cal
               </Text>
@@ -310,7 +368,7 @@ const Restaurant = ({ route, navigation }) => {
         {renderDots()}
         <View
           style={{
-            backgroundColor: COLORS.white,
+            backgroundColor: isDarkMode ? COLORS.darkerGray : COLORS.white,
             borderTopLeftRadius: 40,
             borderTopRightRadius: 40,
           }}>
@@ -320,11 +378,23 @@ const Restaurant = ({ route, navigation }) => {
               justifyContent: 'space-between',
               paddingVertical: SIZES.padding * 2,
               paddingHorizontal: SIZES.padding * 3,
-              borderBottomColor: COLORS.lightGray2,
+              borderBottomColor: isDarkMode ? COLORS.black : COLORS.lightGray2,
               borderBottomWidth: 1,
             }}>
-            <Text style={{ ...FONTS.h3 }}>items in Cart</Text>
-            <Text style={{ ...FONTS.h3 }}>$59</Text>
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: isDarkMode ? COLORS.white : COLORS.black,
+              }}>
+              {getBasketItemCount()} items in Cart
+            </Text>
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: isDarkMode ? COLORS.white : COLORS.black,
+              }}>
+              $ {sumOrder()}
+            </Text>
           </View>
           <View
             style={{
@@ -343,7 +413,12 @@ const Restaurant = ({ route, navigation }) => {
                   tintColor: COLORS.darkgray,
                 }}
               />
-              <Text style={{ marginLeft: SIZES.padding, ...FONTS.h4 }}>
+              <Text
+                style={{
+                  marginLeft: SIZES.padding,
+                  ...FONTS.h4,
+                  color: isDarkMode ? COLORS.white : COLORS.black,
+                }}>
                 Location
               </Text>
             </View>
@@ -357,7 +432,12 @@ const Restaurant = ({ route, navigation }) => {
                   tintColor: COLORS.darkgray,
                 }}
               />
-              <Text style={{ marginLeft: SIZES.padding, ...FONTS.h4 }}>
+              <Text
+                style={{
+                  marginLeft: SIZES.padding,
+                  ...FONTS.h4,
+                  color: isDarkMode ? COLORS.white : COLORS.black,
+                }}>
                 5312
               </Text>
             </View>
@@ -377,7 +457,13 @@ const Restaurant = ({ route, navigation }) => {
                 backgroundColor: COLORS.primary,
                 alignItems: 'center',
                 borderRadius: SIZES.radius,
-              }}>
+              }}
+              onPress={() =>
+                navigation.navigate('OrderDelivery', {
+                  restaurant: restaurant,
+                  currentLocation: currentLocation,
+                })
+              }>
               <Text style={{ color: COLORS.white, ...FONTS.h2 }}>Order</Text>
             </TouchableOpacity>
           </View>
@@ -390,7 +476,7 @@ const Restaurant = ({ route, navigation }) => {
               left: 0,
               right: 0,
               height: 34,
-              backgroundColor: COLORS.white,
+              backgroundColor: isDarkMode ? COLORS.darkerGray : COLORS.white,
             }}
           />
         )}
@@ -406,12 +492,5 @@ const Restaurant = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.lightGray2,
-  },
-});
 
 export default Restaurant;

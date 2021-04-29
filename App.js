@@ -5,22 +5,26 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Home, OrderDelivery, Restaurant } from './screens';
 import Tabs from './navigation/tabs';
 import { COLORS } from './constants';
+import { useDarkMode } from 'react-native-dynamic';
 
 const MyStatusBar = ({ backgroundColor, ...props }) => (
   <View style={[styles.statusBar, { backgroundColor }]}>
     <SafeAreaView>
-      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+      <StatusBar {...props} />
     </SafeAreaView>
   </View>
 );
 
 const Stack = createStackNavigator();
+
 const App = () => {
+  const isDarkMode = useDarkMode();
+
   return (
     <>
       <MyStatusBar
-        backgroundColor={COLORS.lightGray4}
-        barStyle="dark-content"
+        backgroundColor={isDarkMode ? COLORS.black : COLORS.lightGray4}
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer>
         <Stack.Navigator
@@ -28,7 +32,11 @@ const App = () => {
           initialRouteName="Home">
           <Stack.Screen name="Home" component={Tabs} />
           <Stack.Screen name="Restaurant" component={Restaurant} />
-          <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
+          <Stack.Screen
+            name="OrderDelivery"
+            component={OrderDelivery}
+            initialParams={{ isDarkMode: isDarkMode }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>
