@@ -1,5 +1,7 @@
 # food-delivery-app
 
+![til](./food-delivery.gif)
+
 ## Setup
 
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
