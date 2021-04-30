@@ -27,7 +27,7 @@ const TabBarCustomButton = ({
             flexDirection: 'row',
             position: 'absolute',
             top: 0,
-            backgroundColor: isDarkMode ? COLORS.darkBlack : COLORS.white,
+            backgroundColor: isDarkMode ? COLORS.darkBlack : COLORS.lightGray4,
           }}>
           <View
             style={{
