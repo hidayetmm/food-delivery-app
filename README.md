@@ -1,6 +1,6 @@
 # food-delivery-app
 
-![til](food-delivery.gif)
+![til](./food-delivery.gif)
 
 ## Setup
 
